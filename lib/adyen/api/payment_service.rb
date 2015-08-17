@@ -230,10 +230,26 @@ module Adyen
 
         def params
           @params ||= xml_querier.xpath('//payment:authoriseResponse/payment:paymentResult') do |result|
+            if result.children.is_a? Nokogiri::XML::NodeSet
+              url_entry = result.children.detect do |item|
+                item.children.find  { |node| node.text =~ /boletobancario.url/}
+              end
+
+              value_entry = url_entry.children.detect do |item|
+                item.children.find  { |node| node.text =~ /boletobancario.url/}
+              end if url_entry
+
+              if value_entry
+                billet_url = value_entry.children.find  { |node| node.name =~ /value/ }.text || ""
+              end
+            else
+              billet_url = ""
+            end
+
             {
               :psp_reference  => result.text('./payment:pspReference'),
               :result_code    => result_code = result.text('./payment:resultCode'),
-              :billet_url     => (result_code == RECEIVED) ? result.children[0].children[0].children[1].text : ""
+              :billet_url     => (result_code == RECEIVED) ? billet_url : ""
             }
           end
         end
