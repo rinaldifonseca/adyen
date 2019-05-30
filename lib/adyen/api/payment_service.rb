@@ -124,6 +124,7 @@ module Adyen
         content  =  amount_partial
         content << social_security_number_partial if @params[:social_security_number]
         content << shopper_name_partial if @params[:shopper_name]
+        content << shopper_statement_partial if @params[:shopper_statement]
         content << delivery_date_partial if @params[:delivery_date]
         content << selected_brand_partial if @params[:selected_brand]
         LAYOUT % [@params[:merchant_account], @params[:reference], content]
@@ -168,6 +169,10 @@ module Adyen
 
       def shopper_name_partial
         SHOPPER_NAME_PARTIAL % @params[:shopper_name].values_at(:first_name, :last_name)
+      end
+
+      def shopper_statement_partial
+        SHOPPER_STATEMENT_PARTIAL % @params[:shopper_statement]
       end
 
       def card_partial
