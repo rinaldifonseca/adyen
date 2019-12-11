@@ -226,6 +226,14 @@ module Adyen
 
       class BilletResponse < Response
         RECEIVED = "Received"
+        FIELDS = { 'boletobancario.url' => :billet_url,
+                   'boletobancario.barCodeReference' => :bar_code,
+                   'issuerCountry' => :issuer_country,
+                   'boletobancario.data' => :billet_data,
+                   'boletobancario.dueDate' => :due_date,
+                   'paymentMethod' => :payment_method,
+                   'paymentMethodVariant' => :payment_method_variant,
+                   'boletobancario.expirationDate' => :expiration_date }
 
         response_attrs :result_code, :billet_url, :psp_reference
 
@@ -236,26 +244,32 @@ module Adyen
         def params
           @params ||= xml_querier.xpath('//payment:authoriseResponse/payment:paymentResult') do |result|
             if result.children.is_a? Nokogiri::XML::NodeSet
-              url_entry = result.children.detect do |item|
-                item.children.find  { |node| node.text =~ /boletobancario.url/}
+
+              output_hash = {}
+
+              FIELDS.to_a.map do |key,value|
+                key_entry = result.children.detect do |item|
+                  item.children.find  { |node| node.text =~ /#{key}/}
+                end
+
+                value_entry = key_entry.children.detect do |item|
+                  item.children.find  { |node| node.text =~ /#{key}/}
+                end if key_entry
+       
+                if value_entry
+                  output_hash[value] = value_entry.children.find  { |node| node.name =~ /value/ }.text || ""
+                end
               end
 
-              value_entry = url_entry.children.detect do |item|
-                item.children.find  { |node| node.text =~ /boletobancario.url/}
-              end if url_entry
-
-              if value_entry
-                billet_url = value_entry.children.find  { |node| node.name =~ /value/ }.text || ""
-              end
             else
               billet_url = ""
             end
 
-            {
-              :psp_reference  => result.text('./payment:pspReference'),
-              :result_code    => result_code = result.text('./payment:resultCode'),
-              :billet_url     => (result_code == RECEIVED) ? billet_url : ""
-            }
+            output_hash[:psp_reference] = result.text('./payment:pspReference')
+            output_hash[:result_code]   = result_code = result.text('./payment:resultCode')
+            output_hash[:refusal_reason] = result.text('./payment:refusalReason')
+
+            output_hash
           end
         end
 
