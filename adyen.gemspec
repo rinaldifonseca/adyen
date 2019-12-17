@@ -32,6 +32,7 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency('rails', '>= 3.2')
   s.add_development_dependency('nokogiri', '>= 1.6.1')
+  s.add_development_dependency('pry')
 
   s.requirements << 'Having Nokogiri installed will speed up XML handling when using the SOAP API.'
 
