@@ -235,29 +235,54 @@ module Adyen
                    'paymentMethodVariant' => :payment_method_variant,
                    'boletobancario.expirationDate' => :expiration_date }
 
-        response_attrs :result_code, :billet_url, :psp_reference
+        response_attrs :result_code,
+                       :billet_url,
+                       :psp_reference,
+                       :bar_code,
+                       :refusal_reason,
+                       :issuer_country,
+                       :billet_data,
+                       :due_date,
+                       :payment_method,
+                       :payment_method_variant,
+                       :expiration_date
 
         def success?
           super && params[:result_code] == RECEIVED
         end
 
         def params
+          output_hash = { billet_url: "" }
           @params ||= xml_querier.xpath('//payment:authoriseResponse/payment:paymentResult') do |result|
             if result.children.is_a? Nokogiri::XML::NodeSet
 
-              output_hash = {}
-
               FIELDS.to_a.map do |key,value|
                 key_entry = result.children.detect do |item|
-                  item.children.find  { |node| node.text =~ /#{key}/}
+                  item.respond_to? :children and item.children.find { |node| node.respond_to? :text and node.text =~ /#{key}/ }
                 end
 
-                value_entry = key_entry.children.detect do |item|
-                  item.children.find  { |node| node.text =~ /#{key}/}
-                end if key_entry
-       
+                value_entry = key_entry.children.detect { |item|
+                  item.respond_to? :children and item.children.find  { |node| node.respond_to? :text and node.text =~ /#{key}/ }
+                } if key_entry
+
                 if value_entry
                   output_hash[value] = value_entry.children.find  { |node| node.name =~ /value/ }.text || ""
+                end
+              end
+
+            elsif result.children.is_a? Array
+              additional_data = result.xpath('./payment:additionalData')
+              FIELDS.to_a.map do |key,value|
+                key_entry = additional_data.children.detect do |item|
+                  item.respond_to? :children and item.children.find { |node| node.respond_to? :text and node.text =~ /#{key}/ }
+                end
+
+                if key_entry.respond_to? :children
+                  value_entry = key_entry.children.select {|item| item.respond_to? :children }.last.first
+                end
+
+                if value_entry
+                  output_hash[value] = value_entry
                 end
               end
 

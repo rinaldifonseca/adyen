@@ -164,9 +164,17 @@ describe Adyen::API::PaymentService do
 
   describe_response_from :generate_billet, BILLET_RECEIVED_RESPONSE do
     it_should_return_params_for_each_xml_backend({
-      :psp_reference => "8814038837489129",
+      :psp_reference => "851576501642626E",
       :result_code => "Received",
-      :billet_url => "https://test.adyen.com/hpp/generationBoleto.shtml?data=AgABAQBdYDe9OqdseA79Rfexm2Lz8fRQ1bWqkLhBCf1fHhQEif7bsRKi0otq%2B1ekMAdMIZUiVXeR3QFrAOA8Zy4tpiNLhkMq6f7W2zFqYhVWrByqxQnbQTYuX2FWI7tsu7Vb0MnyOvFfFdFtaxzImZYCli%2BMrqaAJ5HI9ap3egeqBQIsRI%2Fj0zWsu2EGN16lGbwFOLyxl%2By0Pc5jazTo8rnBA7OVPGDIu7Qt%2F2DYIMcB6PXou5W3aJoTC4SldhNdobVqgWUtES8NsWdOYbLGa6I%2BjSwEFXvxyTXwtw4J2E%2BE7ux1UhBiZRj66lMbcvaYlfnR2xWbA%2BKmdLrVvuXTroEHKQ%2B1C%2FuyGuiOk3SmGq6TMgOyCEt%2BmG%2Bq6z5jDi%2BnYLtlLQU4ccMOujgWMfGkViC%2FXDUlqYjKbn8NHwPwoPcelpf1zCDCe%2Fvu6NBTVQbEXbE0oV0j2MT1tLlMdf08iUsDThuQ3MlJbE8VbTMlttOFqoyXhBjepQ42C1eXfswSz1gsZlHanBCTiw1pB69vkvfWPf5IdUSx1cpEr9LJ9PSz%2FeHxEhq%2B8ZdWzrybXqRbEl2mUjLeyhMNuiE%3D"
+      :billet_url => "https://test.adyen.com/hpp/generationBoleto.shtml?data=BQABAQBn3RXuvYGtAYx%2FSaVE5Xx4Zp80eoMlCn2NomU1v3kJTDH0fFcDEi7RoMhjy%2F%2F6O1bUy9SR7Ge2B2Rq%2FIxFF%2BkEPuL1eN%2F9PcJwfClAvrynsz%2FsUyFBLojHQcFAnDDj8P1EblxYPayASR%2BuHVPgRyOi9TaAGAofq9iQXNiDGtrM0Auv45mkm5odE8L0AOpLpUnNMhILajq3AI0g7EGwHL3rhLjTZBCqDeqZI5QNnGI0KgxiAIl5suIU6iaaicgngoCQzFstSFX6Sm5ZfIc2eaYjkPwN8uT608y%2Bi5HYBJpECv2kJZQ3FKB%2FBfzUN%2BwygwSTwvnDmZ3Xi2Rr6u80NXfdEMt%2FxT170ZcQhi7uImRLxWoAAMGRPqprErPVfxEQD5BpXC4f8o4f%2FRjuiOxeePfRIFqIrPlAofmQ9ThlPyUocNEXYyn44%2FAk291FixYPxj5GSTkk03tBDCHTQs6n3bCbKPWruAMvqQTrBaS15YxRY%2BBT20vhdaJDQo07TxvbN5eb4KQb4%2BmuV2ugZW7b2zmL6aS0bHQKjsQO98S8sM5jrb39Tw5QdjcSbFK%2Bpix0S%2BhSHHzB%2F80RkNnu6dntnTuHtdS3HM%2B2MctIGRrqCHn%2FyBDHGIjawgArt%2B9HQF4%3D",
+      :bar_code => "03399.33335 33857.650163 42626.201026 1 81100000010000",
+      :refusal_reason => "",
+      :due_date => "2019-12-21",
+      :expiration_date => "2020-01-05",
+      :issuer_country => "BR",
+      :payment_method => "boletobancario_santander",
+      :payment_method_variant => "boletobancario_santander",
+      :billet_data => "BQABAQBn3RXuvYGtAYx/SaVE5Xx4Zp80eoMlCn2NomU1v3kJTDH0fFcDEi7RoMhjy//6O1bUy9SR7Ge2B2Rq/IxFF+kEPuL1eN/9PcJwfClAvrynsz/sUyFBLojHQcFAnDDj8P1EblxYPayASR+uHVPgRyOi9TaAGAofq9iQXNiDGtrM0Auv45mkm5odE8L0AOpLpUnNMhILajq3AI0g7EGwHL3rhLjTZBCqDeqZI5QNnGI0KgxiAIl5suIU6iaaicgngoCQzFstSFX6Sm5ZfIc2eaYjkPwN8uT608y+i5HYBJpECv2kJZQ3FKB/BfzUN+wygwSTwvnDmZ3Xi2Rr6u80NXfdEMt/xT170ZcQhi7uImRLxWoAAMGRPqprErPVfxEQD5BpXC4f8o4f/RjuiOxeePfRIFqIrPlAofmQ9ThlPyUocNEXYyn44/Ak291FixYPxj5GSTkk03tBDCHTQs6n3bCbKPWruAMvqQTrBaS15YxRY+BT20vhdaJDQo07TxvbN5eb4KQb4+muV2ugZW7b2zmL6aS0bHQKjsQO98S8sM5jrb39Tw5QdjcSbFK+pix0S+hSHHzB/80RkNnu6dntnTuHtdS3HM+2MctIGRrqCHn/yBDHGIjawgArt+9HQF4="
     })
 
     describe "with a received billet" do
@@ -180,7 +188,8 @@ describe Adyen::API::PaymentService do
     it_should_return_params_for_each_xml_backend({
       :psp_reference => "8514038928235061",
       :result_code => "Refused",
-      :billet_url => ""
+      :billet_url => "",
+      :refusal_reason=>"102 Unable to determine variant"
     })
 
     describe "with a received billet" do
